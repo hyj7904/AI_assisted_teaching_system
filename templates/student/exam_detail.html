@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}考试详情 - 教学辅助系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-file-alt me-2"></i>考试详情</h2>
+    <a href="{{ url_for('student.exams') }}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>返回考试列表
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">{{ exam.title }}</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ exam.description }}</p>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h6>考试信息</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-calendar me-2 text-muted"></i>开始时间: {{ exam.start_time.strftime('%Y-%m-%d %H:%M') }}</li>
+                            <li><i class="fas fa-calendar me-2 text-muted"></i>结束时间: {{ exam.end_time.strftime('%Y-%m-%d %H:%M') }}</li>
+                            <li><i class="fas fa-hourglass-half me-2 text-muted"></i>考试时长: {{ exam.duration }}分钟</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>考试状态</h6>
+                        {% if exam.end_time < now %}
+                            <span class="badge bg-secondary fs-6">已结束</span>
+                            <p class="mt-2 text-muted">考试已经结束，无法参加。</p>
+                        {% elif exam.start_time > now %}
+                            <span class="badge bg-warning fs-6">未开始</span>
+                            <p class="mt-2 text-muted">考试尚未开始，请等待。</p>
+                        {% else %}
+                            <span class="badge bg-success fs-6">进行中</span>
+                            <p class="mt-2 text-muted">考试正在进行中，可以参加。</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if exam.start_time <= now and exam.end_time >= now %}
+                    <div class="mt-4">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle me-2"></i>考试须知</h6>
+                            <ul class="mb-0">
+                                <li>请确保网络连接稳定</li>
+                                <li>考试期间请不要关闭浏览器</li>
+                                <li>考试时间到将自动提交试卷</li>
+                                <li>请独立完成考试</li>
+                            </ul>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-lg" disabled>
+                                <i class="fas fa-play me-2"></i>开始考试
+                            </button>
+                            <small class="text-muted text-center mt-2">考试功能将在完整版本中实现</small>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">考试提醒</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <small>
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        <strong>注意：</strong>这是一个演示版本，考试功能尚未完全实现。
+                    </small>
+                </div>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i>确保设备电量充足</li>
+                    <li><i class="fas fa-check text-success me-2"></i>准备好身份证件</li>
+                    <li><i class="fas fa-check text-success me-2"></i>提前测试网络连接</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

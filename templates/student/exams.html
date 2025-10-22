@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}考试中心 - 教学辅助系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-file-alt me-2"></i>考试中心</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">考试列表</h5>
+            </div>
+            <div class="card-body">
+                {% if exams %}
+                    <div class="list-group">
+                        {% for exam in exams %}
+                            <div class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-1">
+                                            <a href="{{ url_for('student.exam_detail', exam_id=exam.id) }}" class="text-decoration-none">
+                                                {{ exam.title }}
+                                            </a>
+                                            {% if exam.end_time < now %}
+                                                <span class="badge bg-secondary ms-2">已结束</span>
+                                            {% elif exam.start_time > now %}
+                                                <span class="badge bg-warning ms-2">未开始</span>
+                                            {% else %}
+                                                <span class="badge bg-success ms-2">进行中</span>
+                                            {% endif %}
+                                        </h5>
+                                        <p class="mb-1 text-muted">{{ exam.description }}</p>
+                                        <div class="mt-2">
+                                            <small class="text-muted me-3">
+                                                <i class="fas fa-clock me-1"></i>
+                                                时间: {{ exam.start_time.strftime('%Y-%m-%d %H:%M') }} - {{ exam.end_time.strftime('%H:%M') }}
+                                            </small>
+                                            <small class="text-muted">
+                                                <i class="fas fa-hourglass-half me-1"></i>
+                                                时长: {{ exam.duration }}分钟
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a href="{{ url_for('student.exam_detail', exam_id=exam.id) }}" class="btn btn-primary btn-sm">
+                                            {% if exam.end_time < now %}
+                                                查看结果
+                                            {% elif exam.start_time > now %}
+                                                等待开始
+                                            {% else %}
+                                                开始考试
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted">暂无考试</h4>
+                        <p class="text-muted">当前没有可参加的考试</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
